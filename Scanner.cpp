@@ -27,7 +27,7 @@ Scanner::Scanner(const char* uri)
         cout << "Problem creating the colour Stream" << endl;
   }
   
-  isScanning = false;
+  scanning = false;
 }
 
 Scanner::~Scanner()
@@ -51,7 +51,7 @@ void Scanner::startScanning()
   if(colourStream.isValid())
     colourStream.start();
   
-  isScanning = true;
+  scanning = true;
 }
 
 
@@ -66,7 +66,7 @@ void Scanner::stopScanning()
   if(colourStream.isValid())
     colourStream.stop();
 
-  isScanning = false;
+  scanning = false;
 }
 
 void Scanner::getFrame(SensorType type, VideoFrameRef *frame)
@@ -94,6 +94,10 @@ void Scanner::getFrame(SensorType type, VideoFrameRef *frame)
 }
 
 
+bool Scanner::isScanning()
+{
+  return scanning;
+}
 
 
 

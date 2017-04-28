@@ -14,6 +14,7 @@ public:
   // OpenGL names for array buffer objects, vertex array object
   GLuint textureName;
   GLenum textureTarget;
+
   // dimensions of the image stored in this texture
   GLuint width, height;
 

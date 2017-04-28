@@ -12,18 +12,16 @@ class ImageSaver
 protected:
   bool shouldClose;
 
+  mutex lock;
+
 public:
   Scanner* scanner;
 
-  ImageSaver();
+  ImageSaver(Scanner*);
   ~ImageSaver();
 
   void saveImages();
   void close();
-
-
-
-
 };
 
 

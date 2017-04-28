@@ -23,7 +23,7 @@ protected:
   VideoStream depthStream;
   VideoStream colourStream;
 
-  bool isScanning;
+  bool scanning;
 
 public:
   queue<VideoFrameRef*> iRFrames;
@@ -37,6 +37,8 @@ public:
 
   void startScanning();
   void stopScanning();
+
+  bool isScanning();
   
   void getFrame(SensorType type, VideoFrameRef* frame);
 };

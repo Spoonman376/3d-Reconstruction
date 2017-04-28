@@ -29,10 +29,12 @@ int main(int argc, const char * argv[])
   
   glfwSetKeyCallback(window, keyCallback);
   
-  Scanner scanner(ANY_DEVICE);
-  
-  scanner.startScanning();
-  
+  scanner = new Scanner(ANY_DEVICE);
+  ImageSaver imageSaver(scanner);
+
+  // Set up a few view/geometries and create the coresponding texture items
+
+
   while (!glfwWindowShouldClose(window))
   {
     glClearColor(0.2, 0.2, 0.2, 1.0);
@@ -40,24 +42,31 @@ int main(int argc, const char * argv[])
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     VideoFrameRef *frame = new VideoFrameRef();
-    scanner.getFrame(SENSOR_IR, frame);
+    scanner->getFrame(SENSOR_IR, frame);
     Grayscale16Pixel *data = (Grayscale16Pixel*)frame->getData();
 
+    // Update the textures with the new frames
+
+
+    // Render
+
+
     glfwSwapBuffers(window);
-    
+
     // sleep until next event before drawing again
     glfwPollEvents();
   }
-  
-  scanner.stopScanning();
-  
+
+
+  imageSaver.close();
+  delete scanner;
+
   glfwDestroyWindow(window);
   glfwTerminate();
   
   closeOpenNI();
   return 0;
 }
-
 
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -71,6 +80,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
       break;
       
     case GLFW_KEY_SPACE:
+      scanner->isScanning() ? scanner->stopScanning() : scanner->startScanning();
       break;
       
     default:

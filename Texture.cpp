@@ -11,10 +11,7 @@ Texture::Texture(GLenum target)
   glGenTextures(1, &textureName);
   // bind the texture GL_TEXTURE_RECTANGLE as a "rectangle" to access using image pixel coordinates
   glBindTexture(textureTarget, textureName);
-  
-  // send image pixel data to OpenGL texture memory
-//  glTexImage2D(textureTarget, 0, GL_RGB, width, height, 0, GL_BGRA, channelDataType, pixels);
-  
+
   // unbind this texture
   glBindTexture(textureTarget, 0);
   
@@ -39,5 +36,4 @@ void Texture::updateTexture(VideoFrameRef *frame)
   
   // unbind this texture
   glBindTexture(textureTarget, 0);
-
 }
