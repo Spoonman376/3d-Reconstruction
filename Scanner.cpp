@@ -3,29 +3,34 @@
 
 #include "Scanner.h"
 
-Scanner::Scanner(const char* uri)
+Scanner* Scanner::getScanner(const char* uri)
 {
-  // Open the device
-  if (device.open(ANY_DEVICE) != STATUS_OK) {
-    cout << "Problem loading device" << endl;
-  }
-  else {
-    
-    // Open the InfraRed stream if availiable
-    if (device.hasSensor(SENSOR_IR))
-      if (infraRedStream.create(device, SENSOR_IR) != STATUS_OK)
-        cout << "Problem creating the ifra red Stream" << endl;
-    
-    // Open the depth stream if availiable
-    if (device.hasSensor(SENSOR_DEPTH))
-      if (depthStream.create(device, SENSOR_DEPTH) != STATUS_OK)
-        cout << "Problem creating the depth Stream" << endl;
+  Device* d;
+  if (d->open(uri) == STATUS_OK)
+    return new Scanner(d);
+  else
+    return nullptr;
+}
 
-    // Open the colour stream if availiable
-    if (device.hasSensor(SENSOR_COLOR))
-      if (colourStream.create(device, SENSOR_COLOR) != STATUS_OK)
-        cout << "Problem creating the colour Stream" << endl;
-  }
+
+Scanner::Scanner(Device* d)
+{
+  device = d;
+  
+  // Open the InfraRed stream if availiable
+  if (device->hasSensor(SENSOR_IR))
+    if (infraRedStream.create(*device, SENSOR_IR) != STATUS_OK)
+      cout << "Problem creating the ifra red Stream" << endl;
+  
+  // Open the depth stream if availiable
+  if (device->hasSensor(SENSOR_DEPTH))
+    if (depthStream.create(*device, SENSOR_DEPTH) != STATUS_OK)
+      cout << "Problem creating the depth Stream" << endl;
+
+  // Open the colour stream if availiable
+  if (device->hasSensor(SENSOR_COLOR))
+    if (colourStream.create(*device, SENSOR_COLOR) != STATUS_OK)
+      cout << "Problem creating the colour Stream" << endl;
   
   scanning = false;
 }
@@ -36,7 +41,8 @@ Scanner::~Scanner()
   depthStream.destroy();
   colourStream.destroy();
   
-  device.close();
+  device->close();
+  delete device;
 }
 
 
@@ -89,8 +95,32 @@ void Scanner::getFrame(SensorType type, VideoFrameRef *frame)
       break;
   }
   
-  if (s != STATUS_OK)
+  if (s != STATUS_OK) {
     cout << "Problem occured when attempting to read a frame" << endl;
+    return;
+  }
+  
+  if (scanning) {
+    VideoFrameRef *copy = new VideoFrameRef(*frame);
+    
+    switch (type) {
+      case SENSOR_IR:
+        iRFrames.push(copy);
+        break;
+        
+      case SENSOR_DEPTH:
+        depthFrames.push(copy);
+        break;
+        
+      case SENSOR_COLOR:
+        colourFrames.push(copy);
+        break;
+        
+      default:
+        break;
+    }
+  }
+  
 }
 
 

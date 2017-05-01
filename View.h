@@ -10,7 +10,6 @@
 class View
 {
 public:
-
   Texture texture;
 
   View();

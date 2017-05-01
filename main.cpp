@@ -29,7 +29,7 @@ int main(int argc, const char * argv[])
   
   glfwSetKeyCallback(window, keyCallback);
   
-  scanner = new Scanner(ANY_DEVICE);
+  scanner = Scanner::getScanner(ANY_DEVICE);
   ImageSaver imageSaver(scanner);
 
   // Set up a few view/geometries and create the coresponding texture items
@@ -41,14 +41,15 @@ int main(int argc, const char * argv[])
     glClearDepth(MAXFLOAT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+
+    // Update the textures with the new frames
     VideoFrameRef *frame = new VideoFrameRef();
     scanner->getFrame(SENSOR_IR, frame);
     Grayscale16Pixel *data = (Grayscale16Pixel*)frame->getData();
 
-    // Update the textures with the new frames
-
 
     // Render
+    
 
 
     glfwSwapBuffers(window);

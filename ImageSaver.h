@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "Scanner.h"
+#include "cv.h"
 
 class ImageSaver
 {

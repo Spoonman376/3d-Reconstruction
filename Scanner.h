@@ -17,13 +17,14 @@ using namespace openni;
 class Scanner
 {
 protected:
-  Device device;
+  Device* device;
   
   VideoStream infraRedStream;
   VideoStream depthStream;
   VideoStream colourStream;
 
   bool scanning;
+  Scanner(Device *d);
 
 public:
   queue<VideoFrameRef*> iRFrames;
@@ -32,9 +33,11 @@ public:
 
   mutex lock;
 
-  Scanner(const char* uri);
+  static Scanner* getScanner(const char* uri);
   ~Scanner();
+  
 
+  
   void startScanning();
   void stopScanning();
 

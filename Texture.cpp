@@ -32,7 +32,7 @@ void Texture::updateTexture(VideoFrameRef *frame)
   glBindTexture(textureTarget, textureName);
   
   // send image pixel data to OpenGL texture memory
-  glTexImage2D(textureTarget, 0, GL_RGB, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, frame->getData());
+//  glTexImage2D(textureTarget, 0, GL_RGB, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, frame->getData());
   
   // unbind this texture
   glBindTexture(textureTarget, 0);

@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <GLFW/glfw3.h>
+#include "glfw3.h"
 #include <OpenGL/gl3.h>
 #include "OpenNI.h"
 #include <cmath>
