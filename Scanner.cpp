@@ -6,10 +6,13 @@
 Scanner* Scanner::getScanner(const char* uri)
 {
   Device* d;
-  if (d->open(uri) == STATUS_OK)
+  Status s = d->open(uri);
+  if (s == STATUS_OK && d->getDeviceInfo().getName()[0] != '\0')
     return new Scanner(d);
   else
     return nullptr;
+  
+  
 }
 
 

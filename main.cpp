@@ -30,6 +30,12 @@ int main(int argc, const char * argv[])
   glfwSetKeyCallback(window, keyCallback);
   
   scanner = Scanner::getScanner(ANY_DEVICE);
+  if (scanner == nullptr) {
+    cout << "No scanner aviable to use. Exiting Program" << endl;
+    return 0;
+  }
+    
+  
   ImageSaver imageSaver(scanner);
 
   // Set up a few view/geometries and create the coresponding texture items
