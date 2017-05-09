@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl3.h>
-#include "OpenNI.h"
+#include <openni/OpenNI.h>
 #include <cmath>
 
 using namespace openni;
@@ -19,8 +19,6 @@ void queryGLVersion();
 
 bool initalizeOpenNI();
 void closeOpenNI();
-
-
 
 
 #endif /* Utilities_h */

@@ -28,35 +28,30 @@ int main(int argc, const char * argv[])
   }
   
   glfwSetKeyCallback(window, keyCallback);
-  
-  scanner = Scanner::getScanner(ANY_DEVICE);
-  if (scanner == nullptr) {
-    cout << "No scanner aviable to use. Exiting Program" << endl;
-    return 0;
-  }
-    
-  
-  ImageSaver imageSaver(scanner);
+
+
+  scanner = new Scanner(ANY_DEVICE);
+  imageSaver = new ImageSaver(scanner);
+
 
   // Set up a few view/geometries and create the coresponding texture items
-
+  scanner->startScanning();
 
   while (!glfwWindowShouldClose(window))
   {
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClearDepth(MAXFLOAT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
 
     // Update the textures with the new frames
-    VideoFrameRef *frame = new VideoFrameRef();
-    scanner->getFrame(SENSOR_IR, frame);
-    Grayscale16Pixel *data = (Grayscale16Pixel*)frame->getData();
-
+    if (scanner->isScanning()) {
+      VideoFrameRef *frame = new VideoFrameRef();
+      scanner->getFrame(SENSOR_IR, frame);
+      Grayscale16Pixel *data = (Grayscale16Pixel*)frame->getData();
+      delete frame;
+    }
 
     // Render
-    
-
 
     glfwSwapBuffers(window);
 
@@ -64,8 +59,12 @@ int main(int argc, const char * argv[])
     glfwPollEvents();
   }
 
+  scanner->stopScanning();
 
-  imageSaver.close();
+
+  imageSaver->saveImages();
+  imageSaver->close();
+  delete imageSaver;
   delete scanner;
 
   glfwDestroyWindow(window);

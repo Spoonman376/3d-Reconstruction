@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include <stdio.h>
-#include "OpenNI.h"
+#include <openni/OpenNI.h>
 #include <vector>
 #include <queue>
 #include <mutex>
@@ -17,14 +17,13 @@ using namespace openni;
 class Scanner
 {
 protected:
-  Device* device;
+  Device device;
   
   VideoStream infraRedStream;
   VideoStream depthStream;
   VideoStream colourStream;
 
   bool scanning;
-  Scanner(Device *d);
 
 public:
   queue<VideoFrameRef*> iRFrames;
@@ -33,7 +32,7 @@ public:
 
   mutex lock;
 
-  static Scanner* getScanner(const char* uri);
+  Scanner(const char* uri);
   ~Scanner();
   
 

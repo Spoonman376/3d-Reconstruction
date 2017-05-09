@@ -3,36 +3,27 @@
 
 #include "Scanner.h"
 
-Scanner* Scanner::getScanner(const char* uri)
-{
-  Device* d;
-  Status s = d->open(uri);
-  if (s == STATUS_OK && d->getDeviceInfo().getName()[0] != '\0')
-    return new Scanner(d);
-  else
-    return nullptr;
-  
-  
-}
 
-
-Scanner::Scanner(Device* d)
+Scanner::Scanner(const char* uri)
 {
-  device = d;
-  
+  if(device.open(uri) != STATUS_OK) {
+    cout << "No device aviable" << endl;
+    return;
+  }
+
   // Open the InfraRed stream if availiable
-  if (device->hasSensor(SENSOR_IR))
-    if (infraRedStream.create(*device, SENSOR_IR) != STATUS_OK)
+  if (device.hasSensor(SENSOR_IR))
+    if (infraRedStream.create(device, SENSOR_IR) != STATUS_OK)
       cout << "Problem creating the ifra red Stream" << endl;
   
   // Open the depth stream if availiable
-  if (device->hasSensor(SENSOR_DEPTH))
-    if (depthStream.create(*device, SENSOR_DEPTH) != STATUS_OK)
+  if (device.hasSensor(SENSOR_DEPTH))
+    if (depthStream.create(device, SENSOR_DEPTH) != STATUS_OK)
       cout << "Problem creating the depth Stream" << endl;
 
   // Open the colour stream if availiable
-  if (device->hasSensor(SENSOR_COLOR))
-    if (colourStream.create(*device, SENSOR_COLOR) != STATUS_OK)
+  if (device.hasSensor(SENSOR_COLOR))
+    if (colourStream.create(device, SENSOR_COLOR) != STATUS_OK)
       cout << "Problem creating the colour Stream" << endl;
   
   scanning = false;
@@ -44,8 +35,7 @@ Scanner::~Scanner()
   depthStream.destroy();
   colourStream.destroy();
   
-  device->close();
-  delete device;
+  device.close();
 }
 
 
