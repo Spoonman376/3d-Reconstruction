@@ -6,7 +6,11 @@
 
 #include <iostream>
 #include <stdio.h>
-#include <openni/OpenNI.h>
+#ifdef CMAKE
+	#include <OpenNI.h>
+#else
+	#include <openni/OpenNI.h>
+#endif
 #include <vector>
 #include <queue>
 #include <mutex>

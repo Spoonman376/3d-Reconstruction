@@ -8,7 +8,11 @@
 #include <stdio.h>
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl3.h>
-#include <openni/OpenNI.h>
+#ifdef CMAKE
+	#include <OpenNI.h>
+#else
+	#include <openni/OpenNI.h>
+#endif
 #include <cmath>
 
 using namespace openni;
