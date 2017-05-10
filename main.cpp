@@ -40,7 +40,8 @@ int main(int argc, const char * argv[])
   while (!glfwWindowShouldClose(window))
   {
     glClearColor(0.2, 0.2, 0.2, 1.0);
-    glClearDepth(MAXFLOAT);
+//    glClearDepth(MAXFLOAT);
+    glClearDepth(FLT_MAX);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Update the textures with the new frames
