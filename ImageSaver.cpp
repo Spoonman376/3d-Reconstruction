@@ -5,11 +5,15 @@
 
 using namespace boost::filesystem;
 
-ImageSaver::ImageSaver(Scanner * s)
+ImageSaver::ImageSaver()
 {
-  shouldClose = false;
-  scanner = s;
-  // create a folder to hold the image files
+  const string irPath = "irframes";
+  const string colorPath = "colourframes";
+  const string depthPath = "depthframes";
+
+  imagePaths.push_back(irPath);
+  imagePaths.push_back(colorPath);
+  imagePaths.push_back(depthPath);
 }
 
 
@@ -18,62 +22,64 @@ ImageSaver::~ImageSaver()
 
 }
 
-// Ideally this method would run on a separate thread
-void ImageSaver::saveImages()
+// maybe change this to create a new directory rather than delete the current one.
+void ImageSaver::setUpDirectories()
 {
-  const char irPath[] = "depthframes";
-  const char depthPath[] = "irframes";
-
-	path irDir(irPath);
-	path depthDir(depthPath);
+	path irDir(imagePaths[SENSOR_IR - 1]);
+	path colourDir(imagePaths[SENSOR_COLOR - 1]);
+  path depthDir(imagePaths[SENSOR_DEPTH - 1]);
 
   if (is_directory(irDir))
     boost::filesystem::remove_all(irDir);
+
+  if (is_directory(colourDir))
+    boost::filesystem::remove_all(colourDir);
 
   if (is_directory(depthDir))
     boost::filesystem::remove_all(depthDir);
 
   create_directory(irDir);
+  create_directory(colourDir);
   create_directory(depthDir);
 
   imageCount = 0;
-
-  lock.lock();
-  while(!shouldClose || !scanner->iRFrames.empty()) // or there are still images to write
-  {
-    // write the first frame in the queue to a file
-    if (!scanner->iRFrames.empty())
-    {
-      scanner->lock.lock();
-
-      VideoFrameRef* frame = scanner->iRFrames.front();
-      scanner->iRFrames.pop();
-
-      scanner->lock.unlock();
-
-      int width = frame->getWidth();
-      int height = frame->getHeight();
-      int size = frame->getDataSize();
-
-      Mat image = Mat(height, width, size / (width * height), (Grayscale16Pixel*)frame->getData());
-
-      string s = "irframes/Image" + to_string(imageCount) + ".jpg";
-      imwrite(s, image);
-
-      delete frame;
-    }
-    else
-      shouldClose = true;
-
-    imageCount++;
-  }
-  lock.unlock();
 }
 
 
-void ImageSaver::close()
+void ImageSaver::saveImages(vector<VideoFrameRef*> frames)
 {
-  shouldClose = true;
-  lock.lock();
-  lock.unlock();
+  for(int i = 0; i <= 2; ++i)
+  {
+    VideoFrameRef* frame = frames[i];
+    if (frame == nullptr)
+      continue;
+
+    int width = frame->getWidth();
+    int height = frame->getHeight();
+    int size = frame->getDataSize();
+
+    Mat image;
+    string path = imagePaths[frame->getSensorType() - 1] + "/Image" + to_string(imageCount) + ".jpg";;
+
+    switch (frame->getSensorType()) {
+      case openni::SENSOR_IR:
+      image = Mat(height, width, size / (width * height), (Grayscale16Pixel*)frame->getData());
+      break;
+
+      case openni::SENSOR_COLOR:
+      image = Mat(height, width, size / (width * height), (RGB888Pixel*)frame->getData());
+      break;
+
+      case openni::SENSOR_DEPTH:
+      image = Mat(height, width, size / (width * height), (DepthPixel*)frame->getData());
+      break;
+    }
+
+    imwrite(path, image);
+
+    delete frame;
+  }
+
+  imageCount++;
 }
+

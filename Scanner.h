@@ -22,31 +22,18 @@ class Scanner
 {
 protected:
   Device device;
-  
-  VideoStream infraRedStream;
-  VideoStream depthStream;
-  VideoStream colourStream;
 
-  bool scanning;
+  vector<VideoStream*> streams;
 
 public:
-  queue<VideoFrameRef*> iRFrames;
-  queue<VideoFrameRef*> depthFrames;
-  queue<VideoFrameRef*> colourFrames;
-
-  mutex lock;
-
   Scanner(const char* uri);
   ~Scanner();
-  
-
   
   void startScanning();
   void stopScanning();
 
-  bool isScanning();
-  
   void getFrame(SensorType type, VideoFrameRef* frame);
+  void getFrames(vector<VideoFrameRef*> &frames);
 };
 
 

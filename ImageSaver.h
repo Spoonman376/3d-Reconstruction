@@ -5,29 +5,28 @@
 #define ImageSaver_h
 
 #include <stdio.h>
-#include "Scanner.h"
+#include <openni/OpenNI.h>
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
 
+using namespace openni;
 using namespace cv;
+using namespace std;
 
 class ImageSaver
 {
 protected:
-  bool shouldClose;
   int imageCount;
-
-  mutex lock;
+  vector<const string> imagePaths;
 
 public:
-  Scanner* scanner;
-
-  ImageSaver(Scanner*);
+  ImageSaver();
   ~ImageSaver();
 
-  void saveImages();
-  void close();
+  void setUpDirectories();
+
+  void saveImages(vector<VideoFrameRef*>);
 };
 
 

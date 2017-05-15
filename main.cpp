@@ -31,8 +31,8 @@ int main(int argc, const char * argv[])
 
 
   scanner = new Scanner(ANY_DEVICE);
-  imageSaver = new ImageSaver(scanner);
-
+  imageSaver = new ImageSaver();
+  imageSaver->setUpDirectories();
 
   // Set up a few view/geometries and create the coresponding texture items
   scanner->startScanning();
@@ -45,13 +45,10 @@ int main(int argc, const char * argv[])
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Update the textures with the new frames
-    if (scanner->isScanning()) {
-      VideoFrameRef *frame = new VideoFrameRef();
-      scanner->getFrame(SENSOR_IR, frame);
-      Grayscale16Pixel *data = (Grayscale16Pixel*)frame->getData();
-      delete frame;
-    }
+    vector<VideoFrameRef*> frames;
+    scanner->getFrames(frames);
 
+    imageSaver->saveImages(frames);
     // Render
 
     glfwSwapBuffers(window);
@@ -62,9 +59,6 @@ int main(int argc, const char * argv[])
 
   scanner->stopScanning();
 
-
-  imageSaver->saveImages();
-  imageSaver->close();
   delete imageSaver;
   delete scanner;
 
@@ -87,7 +81,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
       break;
       
     case GLFW_KEY_SPACE:
-      scanner->isScanning() ? scanner->stopScanning() : scanner->startScanning();
       break;
       
     default:
