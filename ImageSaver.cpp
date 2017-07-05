@@ -5,7 +5,7 @@
 
 using namespace boost::filesystem;
 
-ImageSaver::ImageSaver()
+ImageSaver::ImageSaver(Scanner* scanner)
 {
   const string irPath = "irframes";
   const string colorPath = "colourframes";
@@ -14,12 +14,22 @@ ImageSaver::ImageSaver()
   imagePaths.push_back(irPath);
   imagePaths.push_back(colorPath);
   imagePaths.push_back(depthPath);
+
+  oniRecorder.create("test.oni");
+
+  if (scanner != nullptr) {
+    for (VideoStream* stream : scanner->streams) {
+      if (stream->isValid())
+        oniRecorder.attach(*stream);
+    }
+  }
 }
 
 
 ImageSaver::~ImageSaver()
 {
-
+  oniRecorder.stop();
+  oniRecorder.destroy();
 }
 
 // maybe change this to create a new directory rather than delete the current one.
@@ -41,6 +51,8 @@ void ImageSaver::setUpDirectories()
   create_directory(irDir);
   create_directory(colourDir);
   create_directory(depthDir);
+
+  oniRecorder.start();
 
   imageCount = 0;
 }

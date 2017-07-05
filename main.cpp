@@ -30,12 +30,14 @@ int main(int argc, const char * argv[])
   glfwSetKeyCallback(window, keyCallback);
 
 
-  scanner = new Scanner(ANY_DEVICE);
-  imageSaver = new ImageSaver();
-  imageSaver->setUpDirectories();
+  //scanner = new Scanner(ANY_DEVICE);
+  //imageSaver = new ImageSaver(scanner);
+  //imageSaver->setUpDirectories();
 
-  // Set up a few view/geometries and create the coresponding texture items
-  scanner->startScanning();
+  Device device;
+  device.open("test.oni");
+
+  //scanner->startScanning();
 
   while (!glfwWindowShouldClose(window))
   {
@@ -44,12 +46,10 @@ int main(int argc, const char * argv[])
     glClearDepth(FLT_MAX);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Update the textures with the new frames
     vector<VideoFrameRef*> frames;
-    scanner->getFrames(frames);
+    //scanner->getFrames(frames);
 
-    imageSaver->saveImages(frames);
-    // Render
+    //imageSaver->saveImages(frames);
 
     glfwSwapBuffers(window);
 
@@ -57,10 +57,10 @@ int main(int argc, const char * argv[])
     glfwPollEvents();
   }
 
-  scanner->stopScanning();
+  //scanner->stopScanning();
 
-  delete imageSaver;
-  delete scanner;
+  //delete imageSaver;
+  //delete scanner;
 
   glfwDestroyWindow(window);
   glfwTerminate();

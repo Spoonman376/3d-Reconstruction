@@ -16,7 +16,7 @@
 #ifdef CMAKE
 	#include <OpenNI.h>
 #else
-	#include <openni/OpenNI.h>
+	#include <openni2/OpenNI.h>
 #endif
 #include <cmath>
 

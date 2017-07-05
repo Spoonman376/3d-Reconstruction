@@ -5,10 +5,11 @@
 #define ImageSaver_h
 
 #include <stdio.h>
-#include <openni/OpenNI.h>
+#include <openni2/OpenNI.h>
 #include <opencv2/opencv.hpp>
 #include <boost/filesystem.hpp>
 #include <string>
+#include "Scanner.h"
 
 using namespace openni;
 using namespace cv;
@@ -19,9 +20,10 @@ class ImageSaver
 protected:
   int imageCount;
   vector<const string> imagePaths;
+  Recorder oniRecorder;
 
 public:
-  ImageSaver();
+  ImageSaver(Scanner*);
   ~ImageSaver();
 
   void setUpDirectories();

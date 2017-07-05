@@ -9,7 +9,7 @@
 #ifdef CMAKE
 	#include <OpenNI.h>
 #else
-	#include <openni/OpenNI.h>
+	#include <openni2/OpenNI.h>
 #endif
 #include <vector>
 #include <queue>
@@ -23,12 +23,13 @@ class Scanner
 protected:
   Device device;
 
-  vector<VideoStream*> streams;
 
 public:
   Scanner(const char* uri);
   ~Scanner();
-  
+
+  vector<VideoStream*> streams;
+
   void startScanning();
   void stopScanning();
 
