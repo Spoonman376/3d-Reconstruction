@@ -30,14 +30,14 @@ int main(int argc, const char * argv[])
   glfwSetKeyCallback(window, keyCallback);
 
 
-  //scanner = new Scanner(ANY_DEVICE);
-  //imageSaver = new ImageSaver(scanner);
-  //imageSaver->setUpDirectories();
+  scanner = new Scanner(ANY_DEVICE);
+  imageSaver = new ImageSaver(scanner);
+  imageSaver->setUpDirectories();
 
-  Device device;
-  device.open("test.oni");
+//  Device device;
+//  device.open("test.oni");
 
-  //scanner->startScanning();
+  scanner->startScanning();
 
   while (!glfwWindowShouldClose(window))
   {
@@ -47,9 +47,9 @@ int main(int argc, const char * argv[])
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     vector<VideoFrameRef*> frames;
-    //scanner->getFrames(frames);
+    scanner->getFrames(frames);
 
-    //imageSaver->saveImages(frames);
+    imageSaver->saveImages(frames);
 
     glfwSwapBuffers(window);
 
@@ -57,10 +57,10 @@ int main(int argc, const char * argv[])
     glfwPollEvents();
   }
 
-  //scanner->stopScanning();
+  scanner->stopScanning();
 
-  //delete imageSaver;
-  //delete scanner;
+  delete imageSaver;
+  delete scanner;
 
   glfwDestroyWindow(window);
   glfwTerminate();

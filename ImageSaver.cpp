@@ -7,9 +7,9 @@ using namespace boost::filesystem;
 
 ImageSaver::ImageSaver(Scanner* scanner)
 {
-  const string irPath = "irframes";
-  const string colorPath = "colourframes";
-  const string depthPath = "depthframes";
+  string irPath = "irframes";
+  string colorPath = "colourframes";
+  string depthPath = "depthframes";
 
   imagePaths.push_back(irPath);
   imagePaths.push_back(colorPath);

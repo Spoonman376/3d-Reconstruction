@@ -19,7 +19,7 @@ class ImageSaver
 {
 protected:
   int imageCount;
-  vector<const string> imagePaths;
+  vector<string> imagePaths;
   Recorder oniRecorder;
 
 public:
