@@ -85,6 +85,7 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> frames)
 
       case openni::SENSOR_DEPTH:
       image = Mat(height, width, CV_16U, (DepthPixel*)frame->getData());
+      path = imagePaths[frame->getSensorType() - 1] + "/Image" + to_string(imageCount) + ".png";
       break;
     }
 
