@@ -19,6 +19,14 @@ Scanner::Scanner(const char* uri)
       if (streams[i]->create(device, SensorType(i + 1)) != STATUS_OK)
         cout << "Problem creating stream " << i << endl;
   }
+
+  device.setDepthColorSyncEnabled(true);
+  if (device.isImageRegistrationModeSupported(IMAGE_REGISTRATION_DEPTH_TO_COLOR)) {
+    cout << "Enabling Image Registraion" << endl;
+    device.setImageRegistrationMode(IMAGE_REGISTRATION_DEPTH_TO_COLOR);
+  }
+
+
 }
 
 Scanner::~Scanner()
