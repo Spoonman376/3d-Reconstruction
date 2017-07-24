@@ -34,9 +34,6 @@ int main(int argc, const char * argv[])
   imageSaver = new ImageSaver(scanner);
   imageSaver->setUpDirectories();
 
-//  Device device;
-//  device.open("test.oni");
-
   scanner->startScanning();
 
   while (!glfwWindowShouldClose(window))
@@ -49,6 +46,10 @@ int main(int argc, const char * argv[])
     scanner->getFrames(frames);
 
     imageSaver->saveImages(frames);
+
+    for (VideoFrameRef* frame : frames)
+      if (frame != nullptr)
+        delete frame;
 
     glfwSwapBuffers(window);
 

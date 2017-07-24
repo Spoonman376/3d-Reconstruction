@@ -58,17 +58,15 @@ void ImageSaver::setUpDirectories()
 }
 
 
-void ImageSaver::saveImages(vector<VideoFrameRef*> frames)
+void ImageSaver::saveImages(vector<VideoFrameRef*> &frames)
 {
-  for(int i = 0; i <= 2; ++i)
-  {
+  for (int i = 0; i <= 2; ++i) {
     VideoFrameRef* frame = frames[i];
     if (frame == nullptr)
       continue;
 
     int width = frame->getWidth();
     int height = frame->getHeight();
-    int size = frame->getDataSize();
 
     Mat image;
     string path = imagePaths[frame->getSensorType() - 1] + "/Image" + to_string(imageCount);
@@ -76,7 +74,7 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> frames)
     switch (frame->getSensorType()) {
       case openni::SENSOR_IR:
       image = Mat(height, width, CV_16U, (Grayscale16Pixel*)frame->getData());
-      path += ".png";
+      path += ".jpg";
       break;
 
       case openni::SENSOR_COLOR:
@@ -92,8 +90,6 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> frames)
     }
 
     imwrite(path, image);
-
-    delete frame;
   }
 
   imageCount++;

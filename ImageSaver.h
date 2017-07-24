@@ -28,7 +28,7 @@ public:
 
   void setUpDirectories();
 
-  void saveImages(vector<VideoFrameRef*>);
+  void saveImages(vector<VideoFrameRef*> &frames);
 };
 
 
