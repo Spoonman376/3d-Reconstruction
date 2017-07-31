@@ -74,7 +74,7 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> &frames)
     switch (frame->getSensorType()) {
       case openni::SENSOR_IR:
       image = Mat(height, width, CV_16U, (Grayscale16Pixel*)frame->getData());
-      path += ".jpg";
+      path += ".png";
       break;
 
       case openni::SENSOR_COLOR:
