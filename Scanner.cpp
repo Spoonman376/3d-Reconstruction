@@ -25,8 +25,6 @@ Scanner::Scanner(const char* uri)
     cout << "Enabling Image Registraion" << endl;
     device.setImageRegistrationMode(IMAGE_REGISTRATION_DEPTH_TO_COLOR); 
   }
-
-
 }
 
 Scanner::~Scanner()
@@ -83,20 +81,6 @@ void Scanner::getFrames(vector<VideoFrameRef*> &frames)
     frames.push_back(frame);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

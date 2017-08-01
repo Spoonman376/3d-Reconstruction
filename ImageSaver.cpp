@@ -60,6 +60,9 @@ void ImageSaver::setUpDirectories()
 
 void ImageSaver::saveImages(vector<VideoFrameRef*> &frames)
 {
+  cv::Mat depth;
+  cv::Mat colour;
+
   for (int i = 0; i <= 2; ++i) {
     VideoFrameRef* frame = frames[i];
     if (frame == nullptr)
@@ -79,18 +82,38 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> &frames)
 
       case openni::SENSOR_COLOR:
       image = Mat(height, width, CV_8UC3, (RGB888Pixel*)frame->getData());
+      colour = Mat(image);
       cv::cvtColor(image, image, CV_RGB2BGR);
       path += ".jpg";
       break;
 
       case openni::SENSOR_DEPTH:
       image = Mat(height, width, CV_16U, (DepthPixel*)frame->getData());
+      depth = Mat(image);
       path += ".png";
       break;
     }
 
     imwrite(path, image);
   }
+
+  if (registerDepthAndColour) {
+    // Some currently hardCoded values for Kinect
+    cv::Mat4f extrinsics;
+
+    float fx_d = 364.630493, fy_d = 364.630493, cx_d = 260.71759, cy_d = 206.957504;
+    float fx_rgb = 1081.37207, fy_rgb = 1081.37207, cx_rgb = 959.5, cy_rgb = 539.5;
+
+    int depthWidth = depth.cols;
+    int depthHeight = depth.rows;
+
+
+
+    
+
+
+  }
+
 
   imageCount++;
 }

@@ -19,6 +19,10 @@ class ImageSaver
 {
 protected:
   int imageCount;
+
+  bool registerDepthAndColour = false;
+
+
   vector<string> imagePaths;
   Recorder oniRecorder;
 

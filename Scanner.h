@@ -23,7 +23,6 @@ class Scanner
 protected:
   Device device;
 
-
 public:
   Scanner(const char* uri);
   ~Scanner();
