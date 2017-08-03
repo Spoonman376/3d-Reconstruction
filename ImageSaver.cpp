@@ -127,7 +127,7 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> &frames)
   if (registerDepthAndColour) {
     cv::Mat undistorted, registered;
     undistorted.create(depth.rows, depth.cols, depth.type());
-    registered.create(colour.rows, colour.cols, colour.type());
+    registered.create(depth.rows, depth.cols, colour.type());
 
     registration->apply(&colour, &depth, &undistorted, &registered);
 
