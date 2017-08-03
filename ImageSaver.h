@@ -10,6 +10,7 @@
 #include <boost/filesystem.hpp>
 #include <string>
 #include "Scanner.h"
+#include "ImageRegistration.h"
 
 using namespace openni;
 using namespace cv;
@@ -21,13 +22,13 @@ protected:
   int imageCount;
 
   bool registerDepthAndColour = false;
-
+  ImageRegistrationKinect* registration;
 
   vector<string> imagePaths;
   Recorder oniRecorder;
 
 public:
-  ImageSaver(Scanner*);
+  ImageSaver(Scanner*, bool reg = false);
   ~ImageSaver();
 
   void setUpDirectories();

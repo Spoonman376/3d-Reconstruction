@@ -5,15 +5,21 @@
 
 using namespace boost::filesystem;
 
-ImageSaver::ImageSaver(Scanner* scanner)
+ImageSaver::ImageSaver(Scanner* scanner, bool reg)
 {
+  registerDepthAndColour = reg;
+
   string irPath = "irframes";
   string colorPath = "colourframes";
   string depthPath = "depthframes";
+  string undistortedPath = "undistortedframes";
+  string registeredPath = "registeredframes";
 
   imagePaths.push_back(irPath);
   imagePaths.push_back(colorPath);
   imagePaths.push_back(depthPath);
+  imagePaths.push_back(undistortedPath);
+  imagePaths.push_back(registeredPath);
 
   oniRecorder.create("test.oni");
 
@@ -23,6 +29,9 @@ ImageSaver::ImageSaver(Scanner* scanner)
         oniRecorder.attach(*stream);
     }
   }
+
+  if (registerDepthAndColour)
+    registration = new ImageRegistrationKinect();
 }
 
 
@@ -30,6 +39,9 @@ ImageSaver::~ImageSaver()
 {
   oniRecorder.stop();
   oniRecorder.destroy();
+
+  if (registration != nullptr)
+    delete registration;
 }
 
 // maybe change this to create a new directory rather than delete the current one.
@@ -38,6 +50,8 @@ void ImageSaver::setUpDirectories()
 	path irDir(imagePaths[SENSOR_IR - 1]);
 	path colourDir(imagePaths[SENSOR_COLOR - 1]);
   path depthDir(imagePaths[SENSOR_DEPTH - 1]);
+  path undistortedDir(imagePaths[3]);
+  path registeredDir(imagePaths[4]);
 
   if (is_directory(irDir))
     boost::filesystem::remove_all(irDir);
@@ -48,9 +62,20 @@ void ImageSaver::setUpDirectories()
   if (is_directory(depthDir))
     boost::filesystem::remove_all(depthDir);
 
+  if (is_directory(undistortedDir))
+    boost::filesystem::remove_all(undistortedDir);
+
+  if (is_directory(registeredDir))
+    boost::filesystem::remove_all(registeredDir);
+
   create_directory(irDir);
   create_directory(colourDir);
   create_directory(depthDir);
+
+  if (registerDepthAndColour) {
+    create_directory(undistortedDir);
+    create_directory(registeredDir);
+  }
 
   oniRecorder.start();
 
@@ -97,21 +122,20 @@ void ImageSaver::saveImages(vector<VideoFrameRef*> &frames)
     imwrite(path, image);
   }
 
+
+  // Currently hardCoded for the Kinect
   if (registerDepthAndColour) {
-    // Some currently hardCoded values for Kinect
-    cv::Mat4f extrinsics;
+    cv::Mat undistorted, registered;
+    undistorted.create(depth.rows, depth.cols, depth.type());
+    registered.create(colour.rows, colour.cols, colour.type());
 
-    float fx_d = 364.630493, fy_d = 364.630493, cx_d = 260.71759, cy_d = 206.957504;
-    float fx_rgb = 1081.37207, fy_rgb = 1081.37207, cx_rgb = 959.5, cy_rgb = 539.5;
+    registration->apply(&colour, &depth, &undistorted, &registered);
 
-    int depthWidth = depth.cols;
-    int depthHeight = depth.rows;
+    string undistortedPath = imagePaths[3] + "/Image" + to_string(imageCount) + ".png";
+    string registeredPath = imagePaths[4] + "/Image" + to_string(imageCount) + ".jpg";
 
-
-
-    
-
-
+    imwrite(undistortedPath, undistorted);
+    imwrite(registeredPath, registered);
   }
 
 

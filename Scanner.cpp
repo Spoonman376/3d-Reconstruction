@@ -21,10 +21,10 @@ Scanner::Scanner(const char* uri)
   }
 
   device.setDepthColorSyncEnabled(true);
-  if (device.isImageRegistrationModeSupported(IMAGE_REGISTRATION_DEPTH_TO_COLOR)) {
-    cout << "Enabling Image Registraion" << endl;
-    device.setImageRegistrationMode(IMAGE_REGISTRATION_DEPTH_TO_COLOR); 
-  }
+//  if (device.isImageRegistrationModeSupported(IMAGE_REGISTRATION_DEPTH_TO_COLOR)) {
+//    cout << "Enabling Image Registraion" << endl;
+//    device.setImageRegistrationMode(IMAGE_REGISTRATION_DEPTH_TO_COLOR); 
+//  }
 }
 
 Scanner::~Scanner()
