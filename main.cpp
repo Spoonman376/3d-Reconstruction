@@ -5,6 +5,24 @@
 
 int main(int argc, const char * argv[])
 {
+  boost::program_options::options_description desc{"options"};
+  desc.add_options()
+    ("help,h", "Help screen")
+    ("registration,r", "registration");
+
+  boost::program_options::variables_map vm;
+  store(parse_command_line(argc, argv, desc), vm);
+  notify(vm);
+
+  bool registration = false;
+
+  if (vm.count("help"))
+    std::cout << desc << '\n';
+  if (vm.count("registration")) {
+    std::cout << "Image registartion Enabled" << std::endl;
+    registration = true;
+  }
+
   // Required before any other OpenNI operations occur
   initalizeOpenNI();
   
@@ -31,7 +49,7 @@ int main(int argc, const char * argv[])
 
 
   scanner = new Scanner(ANY_DEVICE);
-  imageSaver = new ImageSaver(scanner);
+  imageSaver = new ImageSaver(scanner, registration);
   imageSaver->setUpDirectories();
 
   scanner->startScanning();

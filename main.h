@@ -8,6 +8,8 @@
 #include "ImageSaver.h"
 #include "Scanner.h"
 
+#include <boost/program_options.hpp>
+
 
 Scanner* scanner;
 ImageSaver* imageSaver;

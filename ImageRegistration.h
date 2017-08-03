@@ -1,5 +1,28 @@
-//
-//
+/*
+ * This file is part of the OpenKinect Project. http://www.openkinect.org
+ *
+ * Copyright (c) 2014 individual OpenKinect contributors. See the CONTRIB file
+ * for details.
+ *
+ * This code is licensed to you under the terms of the Apache License, version
+ * 2.0, or, at your option, the terms of the GNU General Public License,
+ * version 2.0. See the APACHE20 and GPL2 files for the text of the licenses,
+ * or the following URLs:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ *
+ * If you redistribute this file in source form, modified or unmodified, you
+ * may:
+ *   1) Leave this header intact and distribute it under the same terms,
+ *      accompanying it with the APACHE20 and GPL20 files, or
+ *   2) Delete the Apache 2.0 clause and accompany it with the GPL2 file, or
+ *   3) Delete the GPL v2 clause and accompany it with the APACHE20 file
+ * In all cases you must keep the copyright notice intact and include a copy
+ * of the CONTRIB file.
+ *
+ * Binary distributions must follow the binary distribution requirements of
+ * either License.
+ */
 
 #ifndef ImageRegistration_h
 #define ImageRegistration_h
@@ -22,6 +45,13 @@ struct KinectDepthParams
   float k3; ///< Radial distortion coefficient, 3rd-order
   float p1; ///< Tangential distortion coefficient
   float p2; ///< Tangential distortion coefficient
+
+  KinectDepthParams() {
+    fx = 364.630493;    fy = 364.630493;
+    cx = 260.71759;     cy = 206.957504;
+    k1 = 0.0940838233;  k2 = -0.268225789;  k3 = 0.0886202827;
+    p1 = 0;             p2 = 0;
+  }
 };
 
 struct KinectColourParams
@@ -65,14 +95,28 @@ struct KinectColourParams
   float my_x0y1; // y
   float my_x0y0; // 1
   ///@}
-};
 
+  KinectColourParams() {
+    fx = 1081.37207;            fy = 1081.37207;
+    cx = 959.5;                 cy = 539.5;
+    shift_d = 864;              shift_m = 52;
+
+    mx_x3y0 = 0.000526354997;   mx_x2y1 = -3.83278311e-05;  mx_x1y2 = 0.000375511911;   mx_x3y0 = 0.000526354997;
+    mx_x2y0 = 5.37541891e-05;   mx_x1y1 = 7.39642492e-05;   mx_x1y0 = 0.6373806;
+    mx_x1y0 = 0.6373806;        mx_x0y1 = 0.01219822;
+    mx_x0y0 = 0.157183394;
+
+    my_x3y0 = -1.99896003e-05;  my_x2y1 = 0.000468397688;   my_x1y2 = -4.46143204e-05;  my_x0y3 = 0.000756927882;
+    my_x2y0 = 7.73532975e-06,   my_x1y1 = -0.000127991996;  my_x0y2 = -7.76459783e-05;
+    my_x1y0 = -0.0120614301;    my_x0y1 = 0.636487603;
+    my_x0y0 = 0.0174007304;
+  }
+};
 
 class ImageRegistrationKinect
 {
 public:
-  ImageRegistrationKinect();
-  ImageRegistrationKinect(KinectDepthParams dParams, KinectColourParams cParams);
+  ImageRegistrationKinect(KinectDepthParams dParams = KinectDepthParams(), KinectColourParams cParams = KinectColourParams());
 
   void distort(int mx, int my, float& dx, float& dy) const;
   void depth_to_color(float mx, float my, float& rx, float& ry) const;
